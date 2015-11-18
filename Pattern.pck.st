@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 18 November 2015 at 5:40:14.723157 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 18 November 2015 at 5:52:25.008157 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 5!
+!provides: 'Pattern' 1 6!
 !classDefinition: #CoupledPattern category: #Pattern!
 ActiveModel subclass: #CoupledPattern
 	instanceVariableNames: ''
@@ -131,35 +131,36 @@ initializedInstance
 
 	^ CoupledPattern open! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/17/2015 15:42'!
+!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/18/2015 17:47'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	
 	(self layoutMorph beRow 	"make use of the layoutMorph already in SystemWindow; change it from column to row"
 		name: #'Pattern Row') 	"give the layoutMorph a name which will appear in the halos"
 		
-		setProperty: #handlesKeyboard toValue: #xyz; 	"enable a quiet start from World->New morph... menu"
-		"the property must be present; its actual value does not matter for this purpose except that it cannot be nil"
-		
 		addMorph: self buildUsefulList fixedWidth: 200;
 		addMorph: self buildUsefulPane
 			layoutSpec: (LayoutSpec useAll)
 ! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/17/2015 15:27'!
+!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/18/2015 17:48'!
 buildUsefulList
 
-	^ LayoutMorph newColumn name: #'Some List'! !
+	^ (LayoutMorph newColumn name: #'Some List')
+		
+		setProperty: #handlesKeyboard toValue: #xyz 	"enable a quiet start from World->New morph... menu"
+		"the property must be present; its actual value does not matter for this purpose except that it cannot be nil"
+! !
 
 !DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/17/2015 15:43'!
 buildUsefulPane
 
 	^ LayoutMorph newColumn name: #'An Area'! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:30'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:50'!
 includeInNewMorphMenu
 	"Enables this class to appear in the  World->New morph... menu"
-	"This class must have the #handlesKeyboard property to open cleanly from that menu"
+	"A submorph of this class must have the #handlesKeyboard property to open cleanly from that menu"
 	
 	^ true! !
 
