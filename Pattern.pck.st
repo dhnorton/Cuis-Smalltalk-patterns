@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 18 November 2015 at 2:34:50.87613 pm'!
-'Description Please enter a description for this package'!
-!provides: 'Pattern' 1 4!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 18 November 2015 at 5:40:14.723157 pm'!
+'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
+!provides: 'Pattern' 1 5!
 !classDefinition: #CoupledPattern category: #Pattern!
 ActiveModel subclass: #CoupledPattern
 	instanceVariableNames: ''
@@ -156,10 +156,10 @@ buildUsefulPane
 
 	^ LayoutMorph newColumn name: #'An Area'! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/17/2015 15:27'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:30'!
 includeInNewMorphMenu
-	"Enable starting from the  World->New morph... menu"
-	"Requires #handlesKeyboard property"
+	"Enables this class to appear in the  World->New morph... menu"
+	"This class must have the #handlesKeyboard property to open cleanly from that menu"
 	
 	^ true! !
 
@@ -170,11 +170,14 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 13:49'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:36'!
 open
-"	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+"	Answer an instance of this class.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
 	DecoupledView open.
+	
+	Otherwise, use the World->New morph... menu.	
 "
 	| mod |
 	
@@ -182,7 +185,7 @@ open
 	^ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
-		setWindowColor:  Theme current transcript   	
+		setWindowColor:  Theme current transcript 	"the initial color of the window title bar and frame"	
 							" alternative color specification which matches Cuis themes: 
 									Theme current browser 
 									Theme current changeList 
