@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 17 November 2015 at 9:33:25.069336 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 18 November 2015 at 2:34:50.87613 pm'!
 'Description Please enter a description for this package'!
-!provides: 'Pattern' 1 3!
+!provides: 'Pattern' 1 4!
 !classDefinition: #CoupledPattern category: #Pattern!
 ActiveModel subclass: #CoupledPattern
 	instanceVariableNames: ''
@@ -163,21 +163,14 @@ includeInNewMorphMenu
 	
 	^ true! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/17/2015 18:47'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 14:34'!
 initializedInstance
 	"Answer an instance of this class which is initialized."
-	"This method is required in order that instantiation can occur via World->New morph... menu"
-	|  window |
-	
-	window _ self new.
-	^ window
-		model: (DecoupledPattern new);
-		buildMorphicWindow;
-		setLabel: 'Another Title for a Window on the Decoupled Model';
-		setWindowColor: Theme current transcript
-! !
+	"This method is required in order that instantiation can occur via the World->New morph... menu"
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/17/2015 15:54'!
+	^ self open! !
+
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 13:49'!
 open
 "	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
@@ -186,7 +179,7 @@ open
 	| mod |
 	
 	mod _ DecoupledPattern new. "an instance of the model"
-	(self
+	^ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
 		setWindowColor:  Theme current transcript   	
