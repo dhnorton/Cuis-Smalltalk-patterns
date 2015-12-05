@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2571] on 3 December 2015 at 5:59:07.760896 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 9:20:13.159952 am'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 7!
+!provides: 'Pattern' 1 8!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -209,7 +209,7 @@ initializedInstance
 
 	^ CoupledModel open! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/27/2015 20:43'!
+!DecoupledView methodsFor: 'initialization' stamp: 'dhn 12/5/2015 09:10'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| listM textM |
@@ -219,24 +219,22 @@ buildMorphicWindow
 		
 	listM _ (PluggableListMorph
 				model: model 	"the object specified in self class open"
-				listGetter: #authors
-				indexGetter: #authorIndex
-				indexSetter: #authorIndex:
+				listGetter: #authors 	"the method in 'model' which answers the list content"
+				indexGetter: #authorIndex 	"the method in 'model' which answers the selection made in the list"
+				indexSetter: #authorIndex:	"the method in 'model' which sets the list index"
 				mainView: self
 				menuGetter: nil
 				keystrokeAction: nil)
 					name: #author. 	"give the PluggableListMorph a name which will appear in the halos"
 
 	textM _ (TextModelMorph 
-		withText: 'The quotation will appear here.';
-		withModel: model)
-			askBeforeDiscardingEdits: false;
+		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
+			askBeforeDiscardingEdits: false;	"discard changes to the text"
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
 
-	self layoutMorph
+	self layoutMorph 	"add the above morphs to the window"
 		addMorph: listM;
-		addAdjusterAndMorph: textM
-			layoutSpec: (LayoutSpec useAll)
+		addAdjusterAndMorph: textM layoutSpec: (LayoutSpec useAll)
 ! !
 
 !DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/18/2015 17:48'!
