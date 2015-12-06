@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 1:55:27.856395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 2:53:38.908395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 12!
+!provides: 'Pattern' 1 13!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -143,22 +143,23 @@ fullAttribution
 		ifFalse: [text nextPutAll: ''].
 	^ text contents! !
 
-!DecoupledModel methodsFor: 'operating' stamp: 'dhn 11/27/2015 17:45'!
+!DecoupledModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 14:40'!
 fullNames
 	"Answer a dictionary which translates list names to full names"
 	
 	^ (Dictionary new)
 		at: 'Yogi' put: 'Yogi Berra';
 		at: 'Eddie' put: 'Eddie Murphy';
+		at: 'George' put: 'George Bernard Shaw';
 		at: 'Winnie' put: 'Winston Churchill';
 		at: 'Willy' put: 'William Shakespear';
 		yourself! !
 
-!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 11/27/2015 20:39'!
+!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 14:41'!
 initialize
 	super initialize.
 	self quotes: self setQuotes.
-	self authors: (OrderedCollection with: 'Eddie' with: 'Winnie' with: 'Yogi' with: 'Willy').
+	self authors: (OrderedCollection with: 'Eddie' with: 'Winnie' with: 'Yogi' with: 'Willy' with: 'George').
 	self authorIndex: 0 	"no authors selected in the list"
 	! !
 
@@ -186,14 +187,15 @@ selectedAuthor: anObject
 
 	selectedAuthor _ anObject! !
 
-!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 11/27/2015 17:46'!
+!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 14:52'!
 setQuotes
 	"Answer a dictionary of quotes"
 	
 	^ (Dictionary new)
 		at: 'Yogi' put: 'When you come to a fork in the road, take it.';
 		at: 'Eddie' put: 'One never knows, do one?';
-		at: 'Winnie' put: 'This paper, by its very length, defends itself from ever being read.';
+		at: 'George' put: 'England and America are two countries separated by the same language.';
+		at: 'Winnie' put: 'This report, by its very length, defends itself against the risk of being read.';
 		at: 'Willy' put: 'There is a tide in the affairs of men
 Which, taken at the flood, leads on to fortune...';
 		yourself! !
