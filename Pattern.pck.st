@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 8:07:55.614952 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 9:17:31.291952 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 9!
+!provides: 'Pattern' 1 10!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -99,7 +99,7 @@ authorIndex
 
 	^ authorIndex! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/5/2015 14:29'!
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/5/2015 21:11'!
 authorIndex: anObject
 	"Set the value of authorIndex"
 
@@ -277,7 +277,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/5/2015 14:56'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/5/2015 21:13'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -286,15 +286,14 @@ open
 	
 	Otherwise, use the World->New morph... menu.	
 "
-	| mod |
+	| mod win |
 	
 	mod _ DecoupledModel new. "an instance of the model"
 	"#open:label: will send #buildMorphicWindow to the instance of this class, to allow customization of the view"
-	^ (self
+	win _ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
-			when: #authorChange send: #newText to: self;
-			setWindowColor:  Theme current transcript 	"the initial color of the window title bar and frame"	
+			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame"	
 							" alternative color specification which matches Cuis themes: 
 									Theme current browser 
 									Theme current changeList 
@@ -313,4 +312,6 @@ open
 									Theme current workspace 
 							the above are Theme class methods which answer specific colors
 							"
-		! !
+	mod when: #authorChange send: #newText to: win.
+	^ win
+! !
