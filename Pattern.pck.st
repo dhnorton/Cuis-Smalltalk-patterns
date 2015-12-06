@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 9:20:13.159952 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 8:07:55.614952 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 8!
+!provides: 'Pattern' 1 9!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -33,7 +33,7 @@ CoupledView class
 
 !classDefinition: #DecoupledView category: #Pattern!
 WorkspaceWindow subclass: #DecoupledView
-	instanceVariableNames: ''
+	instanceVariableNames: 'textPane'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -99,11 +99,12 @@ authorIndex
 
 	^ authorIndex! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 20:22'!
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/5/2015 14:29'!
 authorIndex: anObject
 	"Set the value of authorIndex"
 
-	authorIndex _ anObject! !
+	authorIndex _ anObject.
+	self triggerEvent: #authorChange 	"to whom it may concern: a new author has been selected"! !
 
 !DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
 authors
@@ -209,32 +210,32 @@ initializedInstance
 
 	^ CoupledModel open! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 12/5/2015 09:10'!
+!DecoupledView methodsFor: 'initialization' stamp: 'dhn 12/5/2015 11:39'!
 buildMorphicWindow
 	"Specify the layout of the view"
-	| listM textM |
+	| listM |
 	
 	self layoutMorph beRow 	"make use of the layoutMorph already in SystemWindow; change it from column to row"
 		name: #'Pattern Row'. 	"give the layoutMorph a name which will appear in the halos"
-		
+
 	listM _ (PluggableListMorph
 				model: model 	"the object specified in self class open"
 				listGetter: #authors 	"the method in 'model' which answers the list content"
 				indexGetter: #authorIndex 	"the method in 'model' which answers the selection made in the list"
 				indexSetter: #authorIndex:	"the method in 'model' which sets the list index"
-				mainView: self
+				mainView: nil
 				menuGetter: nil
 				keystrokeAction: nil)
 					name: #author. 	"give the PluggableListMorph a name which will appear in the halos"
 
-	textM _ (TextModelMorph 
+	textPane _ (TextModelMorph 
 		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
 			askBeforeDiscardingEdits: false;	"discard changes to the text"
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
 
 	self layoutMorph 	"add the above morphs to the window"
 		addMorph: listM;
-		addAdjusterAndMorph: textM layoutSpec: (LayoutSpec useAll)
+		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
 ! !
 
 !DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/18/2015 17:48'!
@@ -251,6 +252,17 @@ buildUsefulPane
 
 	^ LayoutMorph newColumn name: #'An Area'! !
 
+!DecoupledView methodsFor: 'updating' stamp: 'dhn 12/5/2015 12:13'!
+newText
+	"Set the contents of the text pane"
+	| ix text |
+
+	ix _ model authorIndex.
+	(ix ~= 0)
+		ifTrue: [text _ model quotes at: (model authors at: ix)]
+		ifFalse: [text _ ''].
+	textPane model actualContents: text! !
+
 !DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:50'!
 includeInNewMorphMenu
 	"Enables this class to appear in the  World->New morph... menu"
@@ -265,7 +277,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/27/2015 16:04'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/5/2015 14:56'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -281,7 +293,8 @@ open
 	^ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
-		setWindowColor:  Theme current transcript 	"the initial color of the window title bar and frame"	
+			when: #authorChange send: #newText to: self;
+			setWindowColor:  Theme current transcript 	"the initial color of the window title bar and frame"	
 							" alternative color specification which matches Cuis themes: 
 									Theme current browser 
 									Theme current changeList 
