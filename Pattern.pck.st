@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 5 December 2015 at 9:17:31.291952 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 12:20:33.804395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 10!
+!provides: 'Pattern' 1 11!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -13,7 +13,7 @@ CoupledModel class
 
 !classDefinition: #DecoupledModel category: #Pattern!
 ActiveModel subclass: #DecoupledModel
-	instanceVariableNames: 'authors authorIndex quotes'
+	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -99,12 +99,14 @@ authorIndex
 
 	^ authorIndex! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/5/2015 21:11'!
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 12:04'!
 authorIndex: anObject
 	"Set the value of authorIndex"
 
 	authorIndex _ anObject.
-	self triggerEvent: #authorChange 	"to whom it may concern: a new author has been selected"! !
+	self triggerEvent: #authorChange. 	"to whom it may concern: a new author has been selected"
+	self selectedAuthor: 
+		(authors at: anObject ifAbsent: nil)! !
 
 !DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
 authors
@@ -154,10 +156,17 @@ quotes: anObject
 
 	quotes _ anObject! !
 
-!DecoupledModel methodsFor: 'operating' stamp: 'dhn 11/27/2015 20:46'!
-refetch
-	"Nothing here. Answer true if actualContents was actually fetched."
-	^false! !
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 11:32'!
+selectedAuthor
+	"Answer the value of selectedAuthor"
+
+	^ selectedAuthor! !
+
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 11:32'!
+selectedAuthor: anObject
+	"Set the value of selectedAuthor"
+
+	selectedAuthor _ anObject! !
 
 !DecoupledModel methodsFor: 'initialization' stamp: 'dhn 11/27/2015 17:46'!
 setQuotes
@@ -252,16 +261,23 @@ buildUsefulPane
 
 	^ LayoutMorph newColumn name: #'An Area'! !
 
-!DecoupledView methodsFor: 'updating' stamp: 'dhn 12/5/2015 12:13'!
+!DecoupledView methodsFor: 'updating' stamp: 'dhn 12/6/2015 12:11'!
 newText
 	"Set the contents of the text pane"
 	| ix text |
 
 	ix _ model authorIndex.
+	text _ String new writeStream.
 	(ix ~= 0)
-		ifTrue: [text _ model quotes at: (model authors at: ix)]
-		ifFalse: [text _ ''].
-	textPane model actualContents: text! !
+		ifTrue: [
+			model selectedAuthor: (model authors at: ix).
+			text 
+				nextPutAll: (model quotes at: model selectedAuthor);
+				newLine; newLine; tab; tab;
+				nextPutAll: '- ';
+				nextPutAll: (model fullNames at: model selectedAuthor)]
+		ifFalse: [text nextPutAll: ''].
+	textPane model actualContents: text contents! !
 
 !DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:50'!
 includeInNewMorphMenu
@@ -277,7 +293,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/5/2015 21:13'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 12:18'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -293,8 +309,13 @@ open
 	win _ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
-			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame"	
-							" alternative color specification which matches Cuis themes: 
+			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame; other choices below"	
+			
+	mod when: #authorChange send: #newText to: win.
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
 									Theme current browser 
 									Theme current changeList 
 									Theme current changeSorter 
@@ -310,8 +331,5 @@ open
 									Theme current transcript 
 									Theme current versionsBrowser 
 									Theme current workspace 
-							the above are Theme class methods which answer specific colors
-							"
-	mod when: #authorChange send: #newText to: win.
-	^ win
+	"
 ! !
