@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 12:20:33.804395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 1:55:27.856395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 11!
+!provides: 'Pattern' 1 12!
 !classDefinition: #CoupledModel category: #Pattern!
 ActiveModel subclass: #CoupledModel
 	instanceVariableNames: ''
@@ -125,6 +125,24 @@ editorClass
 
 	^ TextEditor! !
 
+!DecoupledModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 13:25'!
+fullAttribution
+	"Answer the quote and author's full name"
+	| ix text |
+
+	ix _ self authorIndex.
+	text _ String new writeStream.
+	(ix ~= 0)
+		ifTrue: [
+			self selectedAuthor: (self authors at: ix).
+			text 
+				nextPutAll: (self quotes at: self selectedAuthor);
+				newLine; newLine; tab; tab;
+				nextPutAll: '- ';
+				nextPutAll: (self fullNames at: self selectedAuthor)]
+		ifFalse: [text nextPutAll: ''].
+	^ text contents! !
+
 !DecoupledModel methodsFor: 'operating' stamp: 'dhn 11/27/2015 17:45'!
 fullNames
 	"Answer a dictionary which translates list names to full names"
@@ -247,42 +265,15 @@ buildMorphicWindow
 		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
 ! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/18/2015 17:48'!
-buildUsefulList
-
-	^ (LayoutMorph newColumn name: #'Some List')
-		
-		setProperty: #handlesKeyboard toValue: #xyz 	"enable a quiet start from World->New morph... menu"
-		"the property must be present; its actual value does not matter for this purpose except that it cannot be nil"
-! !
-
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 11/17/2015 15:43'!
-buildUsefulPane
-
-	^ LayoutMorph newColumn name: #'An Area'! !
-
-!DecoupledView methodsFor: 'updating' stamp: 'dhn 12/6/2015 12:11'!
+!DecoupledView methodsFor: 'updating' stamp: 'dhn 12/6/2015 13:54'!
 newText
 	"Set the contents of the text pane"
-	| ix text |
 
-	ix _ model authorIndex.
-	text _ String new writeStream.
-	(ix ~= 0)
-		ifTrue: [
-			model selectedAuthor: (model authors at: ix).
-			text 
-				nextPutAll: (model quotes at: model selectedAuthor);
-				newLine; newLine; tab; tab;
-				nextPutAll: '- ';
-				nextPutAll: (model fullNames at: model selectedAuthor)]
-		ifFalse: [text nextPutAll: ''].
-	textPane model actualContents: text contents! !
+	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 17:50'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 13:50'!
 includeInNewMorphMenu
 	"Enables this class to appear in the  World->New morph... menu"
-	"A submorph of this class must have the #handlesKeyboard property to open cleanly from that menu"
 	
 	^ true! !
 
@@ -293,7 +284,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 12:18'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 13:42'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -305,13 +296,14 @@ open
 	| mod win |
 	
 	mod _ DecoupledModel new. "an instance of the model"
-	"#open:label: will send #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
 	win _ (self
 		open: mod
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
 			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame; other choices below"	
-			
-	mod when: #authorChange send: #newText to: win.
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	mod when: #authorChange send: #newText to: win. 	"add an entry to the actionMap of the model"
 	
 	^ win
 	
@@ -331,5 +323,5 @@ open
 									Theme current transcript 
 									Theme current versionsBrowser 
 									Theme current workspace 
-	"
+	or, use a Color class method"
 ! !
