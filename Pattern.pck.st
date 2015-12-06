@@ -1,8 +1,18 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 2:53:38.908395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 3:45:08.045395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 13!
+!provides: 'Pattern' 1 14!
+!classDefinition: #AbstractModel category: #Pattern!
+ActiveModel subclass: #AbstractModel
+	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pattern'!
+!classDefinition: 'AbstractModel class' category: #Pattern!
+AbstractModel class
+	instanceVariableNames: ''!
+
 !classDefinition: #CoupledModel category: #Pattern!
-ActiveModel subclass: #CoupledModel
+AbstractModel subclass: #CoupledModel
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -12,8 +22,8 @@ CoupledModel class
 	instanceVariableNames: ''!
 
 !classDefinition: #DecoupledModel category: #Pattern!
-ActiveModel subclass: #DecoupledModel
-	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
+AbstractModel subclass: #DecoupledModel
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -23,7 +33,7 @@ DecoupledModel class
 
 !classDefinition: #CoupledView category: #Pattern!
 SystemWindow subclass: #CoupledView
-	instanceVariableNames: ''
+	instanceVariableNames: 'textPane'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -41,6 +51,11 @@ WorkspaceWindow subclass: #DecoupledView
 DecoupledView class
 	instanceVariableNames: ''!
 
+
+!AbstractModel commentStamp: 'dhn 12/6/2015 15:21' prior: 0!
+An abstract class containing methods common to some example models. Used to emphasize commonality and distinctions of the coupled and decoupled models.
+
+The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
 !CoupledModel commentStamp: 'dhn 11/27/2015 16:07' prior: 0!
 An example model class, used to deploy a SystemWindow when only one view of this instance is anticipated. This is not the more desirable design, compared to a decoupled one. If unanticipated views become necessary, their presence will entail changes to this model.
@@ -61,6 +76,113 @@ The methods of this class are suitable for copying into classes being developed.
 A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+authorIndex
+	"Answer the value of authorIndex"
+
+	^ authorIndex! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+authorIndex: anObject
+	"Set the value of authorIndex"
+
+	authorIndex _ anObject.
+	self triggerEvent: #authorChange. 	"to whom it may concern: a new author has been selected"
+	self selectedAuthor: 
+		(authors at: anObject ifAbsent: nil)! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+authors
+	"Answer the value of authors"
+
+	^ authors! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+authors: anObject
+	"Set the value of authors"
+
+	authors _ anObject! !
+
+!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+editorClass
+
+	^ TextEditor! !
+
+!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
+fullAttribution
+	"Answer the quote and author's full name"
+	| ix text |
+
+	ix _ self authorIndex.
+	text _ String new writeStream.
+	(ix ~= 0)
+		ifTrue: [
+			self selectedAuthor: (self authors at: ix).
+			text 
+				nextPutAll: (self quotes at: self selectedAuthor);
+				newLine; newLine; tab; tab;
+				nextPutAll: '- ';
+				nextPutAll: (self fullNames at: self selectedAuthor)]
+		ifFalse: [text nextPutAll: ''].
+	^ text contents! !
+
+!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
+fullNames
+	"Answer a dictionary which translates list names to full names"
+	
+	^ (Dictionary new)
+		at: 'Yogi' put: 'Yogi Berra';
+		at: 'Eddie' put: 'Eddie Murphy';
+		at: 'George' put: 'George Bernard Shaw';
+		at: 'Winnie' put: 'Winston Churchill';
+		at: 'Willy' put: 'William Shakespear';
+		yourself! !
+
+!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+initialize
+	super initialize.
+	self quotes: self setQuotes.
+	self authors: (OrderedCollection with: 'Eddie' with: 'Winnie' with: 'Yogi' with: 'Willy' with: 'George').
+	self authorIndex: 0 	"no authors selected in the list"
+	! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+quotes
+	"Answer the value of quotes"
+
+	^ quotes! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+quotes: anObject
+	"Set the value of quotes"
+
+	quotes _ anObject! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+selectedAuthor
+	"Answer the value of selectedAuthor"
+
+	^ selectedAuthor! !
+
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+selectedAuthor: anObject
+	"Set the value of selectedAuthor"
+
+	selectedAuthor _ anObject! !
+
+!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+setQuotes
+	"Answer a dictionary of quotes"
+	
+	^ (Dictionary new)
+		at: 'Yogi' put: 'When you come to a fork in the road, take it.';
+		at: 'Eddie' put: 'One never knows, do one?';
+		at: 'George' put: 'England and America are two countries separated by the same language.';
+		at: 'Winnie' put: 'This report, by its very length, defends itself against the risk of being read.';
+		at: 'Willy' put: 'There is a tide in the affairs of men
+Which, taken at the flood, leads on to fortune...';
+		yourself! !
 
 !CoupledModel class methodsFor: 'instance creation' stamp: 'dhn 11/27/2015 16:03'!
 open
@@ -93,13 +215,7 @@ open
 							"
 		! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 20:22'!
-authorIndex
-	"Answer the value of authorIndex"
-
-	^ authorIndex! !
-
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 12:04'!
+!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:16'!
 authorIndex: anObject
 	"Set the value of authorIndex"
 
@@ -108,122 +224,40 @@ authorIndex: anObject
 	self selectedAuthor: 
 		(authors at: anObject ifAbsent: nil)! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
-authors
-	"Answer the value of authors"
-
-	^ authors! !
-
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
-authors: anObject
-	"Set the value of authors"
-
-	authors _ anObject! !
-
-!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 11/27/2015 20:53'!
-editorClass
-
-	^ TextEditor! !
-
-!DecoupledModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 13:25'!
-fullAttribution
-	"Answer the quote and author's full name"
-	| ix text |
-
-	ix _ self authorIndex.
-	text _ String new writeStream.
-	(ix ~= 0)
-		ifTrue: [
-			self selectedAuthor: (self authors at: ix).
-			text 
-				nextPutAll: (self quotes at: self selectedAuthor);
-				newLine; newLine; tab; tab;
-				nextPutAll: '- ';
-				nextPutAll: (self fullNames at: self selectedAuthor)]
-		ifFalse: [text nextPutAll: ''].
-	^ text contents! !
-
-!DecoupledModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 14:40'!
-fullNames
-	"Answer a dictionary which translates list names to full names"
-	
-	^ (Dictionary new)
-		at: 'Yogi' put: 'Yogi Berra';
-		at: 'Eddie' put: 'Eddie Murphy';
-		at: 'George' put: 'George Bernard Shaw';
-		at: 'Winnie' put: 'Winston Churchill';
-		at: 'Willy' put: 'William Shakespear';
-		yourself! !
-
-!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 14:41'!
+!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:15'!
 initialize
-	super initialize.
-	self quotes: self setQuotes.
-	self authors: (OrderedCollection with: 'Eddie' with: 'Winnie' with: 'Yogi' with: 'Willy' with: 'George').
-	self authorIndex: 0 	"no authors selected in the list"
-	! !
+	super initialize! !
 
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
-quotes
-	"Answer the value of quotes"
-
-	^ quotes! !
-
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 11/27/2015 16:11'!
-quotes: anObject
-	"Set the value of quotes"
-
-	quotes _ anObject! !
-
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 11:32'!
-selectedAuthor
-	"Answer the value of selectedAuthor"
-
-	^ selectedAuthor! !
-
-!DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 11:32'!
-selectedAuthor: anObject
-	"Set the value of selectedAuthor"
-
-	selectedAuthor _ anObject! !
-
-!DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 14:52'!
-setQuotes
-	"Answer a dictionary of quotes"
-	
-	^ (Dictionary new)
-		at: 'Yogi' put: 'When you come to a fork in the road, take it.';
-		at: 'Eddie' put: 'One never knows, do one?';
-		at: 'George' put: 'England and America are two countries separated by the same language.';
-		at: 'Winnie' put: 'This report, by its very length, defends itself against the risk of being read.';
-		at: 'Willy' put: 'There is a tide in the affairs of men
-Which, taken at the flood, leads on to fortune...';
-		yourself! !
-
-!CoupledView methodsFor: 'initialization' stamp: 'dhn 11/16/2015 15:39'!
+!CoupledView methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:38'!
 buildMorphicWindow
 	"Specify the layout of the view"
+	| listM |
 	
+	listM _ (PluggableListMorph
+				model: model 	"the object specified in self class open"
+				listGetter: #authors 	"the method in 'model' which answers the list content"
+				indexGetter: #authorIndex 	"the method in 'model' which answers the selection made in the list"
+				indexSetter: #authorIndex:	"the method in 'model' which sets the list index"
+				mainView: nil
+				menuGetter: nil
+				keystrokeAction: nil)
+					name: #author. 	"give the PluggableListMorph a name which will appear in the halos"
+
+	textPane _ (TextModelMorph 
+		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
+			askBeforeDiscardingEdits: false;	"discard changes to the text"
+			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
+
 	(self layoutMorph beRow 	"make use of the layoutMorph already in SystemWindow; change it from column to row"
 		name: #'Pattern Row') 	"give the layoutMorph a name which will appear in the halos"
 		
 		setProperty: #handlesKeyboard toValue: #xxx; 	"enable a quiet start from World->New morph... menu"
 		"the property must be present; its actual value does not matter for this purpose except that it cannot be nil"
 		
-		addMorph: self buildUsefulList fixedWidth: 200;
-		addMorph: self buildUsefulPane
+		addMorph: listM fixedWidth: 200;
+		addAdjusterAndMorph: textPane
 			layoutSpec: (LayoutSpec useAll)
 ! !
-
-!CoupledView methodsFor: 'initialization' stamp: 'dhn 11/15/2015 16:07'!
-buildUsefulList
-
-	^ LayoutMorph newColumn name: #'Some List'! !
-
-!CoupledView methodsFor: 'initialization' stamp: 'dhn 11/15/2015 16:06'!
-buildUsefulPane
-
-	^ LayoutMorph newColumn name: #UsefulArea! !
 
 !CoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/16/2015 15:32'!
 includeInNewMorphMenu
