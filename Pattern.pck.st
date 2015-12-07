@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 3:45:08.045395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 7:56:20.331395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 14!
+!provides: 'Pattern' 1 15!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -165,11 +165,12 @@ selectedAuthor
 
 	^ selectedAuthor! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 19:56'!
 selectedAuthor: anObject
 	"Set the value of selectedAuthor"
 
-	selectedAuthor _ anObject! !
+	selectedAuthor _ anObject.
+	self changed: #authorIndex 	"enables deselection of the list by using the mouse"! !
 
 !AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
 setQuotes
