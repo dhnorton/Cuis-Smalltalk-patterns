@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 7:56:20.331395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 9:46:17.320395 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 15!
+!provides: 'Pattern' 1 16!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -13,13 +13,13 @@ AbstractModel class
 
 !classDefinition: #CoupledModel category: #Pattern!
 AbstractModel subclass: #CoupledModel
-	instanceVariableNames: ''
+	instanceVariableNames: 'window'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
 !classDefinition: 'CoupledModel class' category: #Pattern!
 CoupledModel class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'window'!
 
 !classDefinition: #DecoupledModel category: #Pattern!
 AbstractModel subclass: #DecoupledModel
@@ -32,7 +32,7 @@ DecoupledModel class
 	instanceVariableNames: ''!
 
 !classDefinition: #CoupledView category: #Pattern!
-SystemWindow subclass: #CoupledView
+WorkspaceWindow subclass: #CoupledView
 	instanceVariableNames: 'textPane'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -84,15 +84,6 @@ authorIndex
 	^ authorIndex! !
 
 !AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
-authorIndex: anObject
-	"Set the value of authorIndex"
-
-	authorIndex _ anObject.
-	self triggerEvent: #authorChange. 	"to whom it may concern: a new author has been selected"
-	self selectedAuthor: 
-		(authors at: anObject ifAbsent: nil)! !
-
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 authors
 	"Answer the value of authors"
 
@@ -139,12 +130,12 @@ fullNames
 		at: 'Willy' put: 'William Shakespear';
 		yourself! !
 
-!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:12'!
 initialize
 	super initialize.
 	self quotes: self setQuotes.
 	self authors: (OrderedCollection with: 'Eddie' with: 'Winnie' with: 'Yogi' with: 'Willy' with: 'George').
-	self authorIndex: 0 	"no authors selected in the list"
+	authorIndex _ 0 	"no authors selected in the list"
 	! !
 
 !AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
@@ -185,36 +176,31 @@ setQuotes
 Which, taken at the flood, leads on to fortune...';
 		yourself! !
 
-!CoupledModel class methodsFor: 'instance creation' stamp: 'dhn 11/27/2015 16:03'!
-open
-"	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 20:39'!
+authorIndex: anObject
+	"Set the value of authorIndex"
 
-	CoupledPattern open.
-"
-	"#open:label: will send #buildMorphicWindow to the instance of the view class, to allow customization of the view"
-	^ (CoupledView 	"the name of the window class, the view"
-		open: CoupledModel new	"the name of the model, which is this class; alternatively use 'self new' "
-		label: 'A Title for a Window on a Coupled Model') 	"the initial title; can be changed later with #setLabel: "
-		setWindowColor:  Color skyBlue  	
-							" alternative color specification which matches Cuis themes: 
-									Theme current browser 
-									Theme current changeList 
-									Theme current changeSorter 
-									Theme current fileContentsBrowser 
-									Theme current packageList 
-									Theme current debugger 
-									Theme current fileList 
-									Theme current messageNames 
-									Theme current messageSet 
-									Theme current object 
-									Theme current testRunner 
-									Theme current textEditor 
-									Theme current transcript 
-									Theme current versionsBrowser 
-									Theme current workspace 
-							the above are Theme class methods which answer specific colors
-							"
-		! !
+	authorIndex _ anObject.
+	window textPane model actualContents: self fullAttribution.
+	self selectedAuthor: 
+		(authors at: anObject ifAbsent: nil)! !
+
+!CoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:06'!
+initialize
+
+	super initialize! !
+
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 20:46'!
+window
+	"Answer the value of window"
+
+	^ window! !
+
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 20:46'!
+window: anObject
+	"Set the value of window"
+
+	window _ anObject! !
 
 !DecoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:16'!
 authorIndex: anObject
@@ -229,7 +215,7 @@ authorIndex: anObject
 initialize
 	super initialize! !
 
-!CoupledView methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:38'!
+!CoupledView methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:33'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| listM |
@@ -257,8 +243,22 @@ buildMorphicWindow
 		
 		addMorph: listM fixedWidth: 200;
 		addAdjusterAndMorph: textPane
-			layoutSpec: (LayoutSpec useAll)
+			layoutSpec: (LayoutSpec useAll).
+			
+	self model window: self
 ! !
+
+!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/6/2015 21:20'!
+textPane
+	"Answer the value of textPane"
+
+	^ textPane! !
+
+!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/6/2015 21:20'!
+textPane: anObject
+	"Set the value of textPane"
+
+	textPane _ anObject! !
 
 !CoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/16/2015 15:32'!
 includeInNewMorphMenu
@@ -267,12 +267,50 @@ includeInNewMorphMenu
 	
 	^ true! !
 
-!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/27/2015 15:54'!
+!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 21:08'!
 initializedInstance
 	"Answer an instance of this class which is initialized."
 	"This method is required in order that instantiation can occur via World->New morph... menu"
 
-	^ CoupledModel open! !
+	^ self open! !
+
+!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 21:25'!
+open
+"	Answer an instance of this class.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	CoupledView open.
+	
+	Otherwise, use the World->New morph... menu.	
+"
+	| win |
+
+	win _ (self
+		open: CoupledModel new "an instance of the model"
+		label: 'A Title for a Window on the Coupled Model') 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Color lightBlue. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
 
 !DecoupledView methodsFor: 'initialization' stamp: 'dhn 12/5/2015 11:39'!
 buildMorphicWindow
@@ -321,7 +359,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 13:42'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 20:31'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -331,11 +369,9 @@ open
 	Otherwise, use the World->New morph... menu.	
 "
 	| mod win |
-	
-	mod _ DecoupledModel new. "an instance of the model"
 
 	win _ (self
-		open: mod
+		open: (mod _ DecoupledModel new) "an instance of the model"
 		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
 			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame; other choices below"	
 	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
