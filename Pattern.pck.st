@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 6 December 2015 at 9:46:17.320395 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 1:05:48.576995 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 16!
+!provides: 'Pattern' 1 17!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -13,7 +13,7 @@ AbstractModel class
 
 !classDefinition: #CoupledModel category: #Pattern!
 AbstractModel subclass: #CoupledModel
-	instanceVariableNames: 'window'
+	instanceVariableNames: 'window textPane'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -33,7 +33,7 @@ DecoupledModel class
 
 !classDefinition: #CoupledView category: #Pattern!
 WorkspaceWindow subclass: #CoupledView
-	instanceVariableNames: 'textPane'
+	instanceVariableNames: 'textMorph'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
@@ -118,7 +118,7 @@ fullAttribution
 		ifFalse: [text nextPutAll: ''].
 	^ text contents! !
 
-!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
+!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/8/2015 12:35'!
 fullNames
 	"Answer a dictionary which translates list names to full names"
 	
@@ -127,7 +127,7 @@ fullNames
 		at: 'Eddie' put: 'Eddie Murphy';
 		at: 'George' put: 'George Bernard Shaw';
 		at: 'Winnie' put: 'Winston Churchill';
-		at: 'Willy' put: 'William Shakespear';
+		at: 'Willy' put: 'William Shakespeare';
 		yourself! !
 
 !AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:12'!
@@ -176,12 +176,12 @@ setQuotes
 Which, taken at the flood, leads on to fortune...';
 		yourself! !
 
-!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 20:39'!
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/8/2015 13:03'!
 authorIndex: anObject
 	"Set the value of authorIndex"
 
 	authorIndex _ anObject.
-	window textPane model actualContents: self fullAttribution.
+	textPane model actualContents: self fullAttribution.
 	self selectedAuthor: 
 		(authors at: anObject ifAbsent: nil)! !
 
@@ -189,6 +189,18 @@ authorIndex: anObject
 initialize
 
 	super initialize! !
+
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/8/2015 12:47'!
+textPane
+	"Answer the value of textPane"
+
+	^ textPane! !
+
+!CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/8/2015 12:47'!
+textPane: anObject
+	"Set the value of textPane"
+
+	textPane _ anObject! !
 
 !CoupledModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 20:46'!
 window
@@ -215,7 +227,7 @@ authorIndex: anObject
 initialize
 	super initialize! !
 
-!CoupledView methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:33'!
+!CoupledView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 12:55'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| listM |
@@ -230,7 +242,7 @@ buildMorphicWindow
 				keystrokeAction: nil)
 					name: #author. 	"give the PluggableListMorph a name which will appear in the halos"
 
-	textPane _ (TextModelMorph 
+	textMorph _ (TextModelMorph 
 		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
 			askBeforeDiscardingEdits: false;	"discard changes to the text"
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
@@ -242,23 +254,23 @@ buildMorphicWindow
 		"the property must be present; its actual value does not matter for this purpose except that it cannot be nil"
 		
 		addMorph: listM fixedWidth: 200;
-		addAdjusterAndMorph: textPane
+		addAdjusterAndMorph: textMorph
 			layoutSpec: (LayoutSpec useAll).
 			
 	self model window: self
 ! !
 
-!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/6/2015 21:20'!
-textPane
-	"Answer the value of textPane"
+!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/8/2015 13:01'!
+textMorph
+	"Answer the value of textMorph"
 
-	^ textPane! !
+	^ textMorph! !
 
-!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/6/2015 21:20'!
-textPane: anObject
-	"Set the value of textPane"
+!CoupledView methodsFor: 'accessing' stamp: 'dhn 12/8/2015 13:01'!
+textMorph: anObject
+	"Set the value of textMorph"
 
-	textPane _ anObject! !
+	textMorph _ anObject! !
 
 !CoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/16/2015 15:32'!
 includeInNewMorphMenu
@@ -274,7 +286,7 @@ initializedInstance
 
 	^ self open! !
 
-!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 21:25'!
+!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 12:53'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -283,13 +295,15 @@ open
 	
 	Otherwise, use the World->New morph... menu.	
 "
-	| win |
+	| win mod |
 
 	win _ (self
-		open: CoupledModel new "an instance of the model"
+		open: (mod _ CoupledModel new) "an instance of the model"
 		label: 'A Title for a Window on the Coupled Model') 	"the initial title; can be changed later with #setLabel: "
 			setWindowColor:  Color lightBlue. 	"the initial color of the window title bar and frame; other choices below"	
 	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+	
+	mod textPane: win textMorph.		"get access to the text pane"
 
 	^ win
 	
