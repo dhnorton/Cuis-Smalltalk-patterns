@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 1:05:48.576995 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 3:29:35.116995 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 17!
+!provides: 'Pattern' 1 18!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -29,6 +29,16 @@ AbstractModel subclass: #DecoupledModel
 	category: 'Pattern'!
 !classDefinition: 'DecoupledModel class' category: #Pattern!
 DecoupledModel class
+	instanceVariableNames: ''!
+
+!classDefinition: #AnotherView category: #Pattern!
+WorkspaceWindow subclass: #AnotherView
+	instanceVariableNames: 'textPane'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pattern'!
+!classDefinition: 'AnotherView class' category: #Pattern!
+AnotherView class
 	instanceVariableNames: ''!
 
 !classDefinition: #CoupledView category: #Pattern!
@@ -64,6 +74,11 @@ The methods of this class are suitable for copying into classes being developed.
 
 !DecoupledModel commentStamp: 'dhn 11/17/2015 15:26' prior: 0!
 An example model class which is unaware of its view or views. As additional views are deployed, their presence will entail no changes to this model.
+
+The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
+
+!AnotherView commentStamp: '<historical>' prior: 0!
+A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
@@ -226,6 +241,147 @@ authorIndex: anObject
 !DecoupledModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:15'!
 initialize
 	super initialize! !
+
+!AnotherView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 14:16'!
+buildMorphicWindow
+	"Specify the layout of the view"
+	| listM |
+	
+	self layoutMorph beRow 	"make use of the layoutMorph already in SystemWindow; change it from column to row"
+		name: #'Pattern Row'. 	"give the layoutMorph a name which will appear in the halos"
+
+	listM _ (PluggableListMorph
+				model: model 	"the object specified in self class open"
+				listGetter: #authors 	"the method in 'model' which answers the list content"
+				indexGetter: #authorIndex 	"the method in 'model' which answers the selection made in the list"
+				indexSetter: #authorIndex:	"the method in 'model' which sets the list index"
+				mainView: nil
+				menuGetter: nil
+				keystrokeAction: nil)
+					name: #author. 	"give the PluggableListMorph a name which will appear in the halos"
+
+	textPane _ (TextModelMorph 
+		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
+			askBeforeDiscardingEdits: false;	"discard changes to the text"
+			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
+
+	self layoutMorph 	"add the above morphs to the window"
+		addMorph: listM;
+		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
+! !
+
+!AnotherView methodsFor: 'updating' stamp: 'dhn 12/8/2015 14:27'!
+whatWasSaid
+	"Set the contents of the text pane"
+
+	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
+
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:16'!
+includeInNewMorphMenu
+	"Enables this class to appear in the  World->New morph... menu"
+	
+	^ true! !
+
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:16'!
+initializedInstance
+	"Answer an instance of this class which is initialized."
+	"This method is required in order that instantiation can occur via the World->New morph... menu"
+
+	^ self open! !
+
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:33'!
+open
+"	Answer an instance of this class.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	AnotherView open.
+	
+	Otherwise, use the World->New morph... menu.	
+"
+	| mod win |
+
+	win _ (AnotherView
+		open: (mod _ DecoupledModel new) "an instance of the model"
+		label: 'Another Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Theme current fileList. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	mod when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
+
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:57'!
+openOn: aModel
+"	Answer an instance of this class on aModel.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	AnotherView openOn: <some model>.
+"
+	| win |
+
+	win _ (AnotherView
+		open: aModel "an instance of the model"
+		label: 'Another Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Theme current fileList. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
+
+!AnotherView class methodsFor: 'example' stamp: 'dhn 12/8/2015 15:24'!
+twoViews
+	"Demonstrate multiple views on the same model, which is unaware that they exist"
+
+	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
+	AnotherView openOn: YerGlobal.		"open a view on the global"
+	DecoupledView openOn: YerGlobal.	"open the second view on the global"
+	
+	"operate either of the above views and note how they affect each other"
+
+"
+	Execute (cmd-d) the following to tidy up by deleting the global:
+	
+	Smalltalk removeKey: #YerGlobal ifAbsent: [].
+"! !
 
 !CoupledView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 12:55'!
 buildMorphicWindow
@@ -412,3 +568,57 @@ open
 									Theme current workspace 
 	or, use a Color class method"
 ! !
+
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:52'!
+openOn: aModel
+"	Answer an instance of this class on aModel.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	DecoupledView openOn: <some model>.
+"
+	| win |
+
+	win _ (self
+		open: aModel "an instance of the model"
+		label: 'A Title for a Window on the Decoupled Model') 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Theme current transcript. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	aModel when: #authorChange send: #newText to: win. 	"add an entry to the actionMap of the model"
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
+
+!DecoupledView class methodsFor: 'example' stamp: 'dhn 12/8/2015 15:24'!
+twoViews
+	"Demonstrate multiple views on the same model, which is unaware that they exist"
+
+	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
+	AnotherView openOn: YerGlobal.		"open a view on the global"
+	DecoupledView openOn: YerGlobal.	"open the second view on the global"
+	
+	"operate either of the above views and note how they affect each other"
+
+"
+	Execute (cmd-d) the following to tidy up by deleting the global:
+	
+	Smalltalk removeKey: #YerGlobal ifAbsent: [].
+"! !
