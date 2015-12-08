@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 3:29:35.116995 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 4:09:14.169995 pm'!
 'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 18!
+!provides: 'Pattern' 1 19!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -367,10 +367,13 @@ openOn: aModel
 	or, use a Color class method"
 ! !
 
-!AnotherView class methodsFor: 'example' stamp: 'dhn 12/8/2015 15:24'!
+!AnotherView class methodsFor: 'example' stamp: 'dhn 12/8/2015 16:08'!
 twoViews
-	"Demonstrate multiple views on the same model, which is unaware that they exist"
-
+	"Demonstrate multiple views on the same model, which is unaware that they exist
+	
+	self twoViews.
+	"
+	
 	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
 	AnotherView openOn: YerGlobal.		"open a view on the global"
 	DecoupledView openOn: YerGlobal.	"open the second view on the global"
@@ -607,9 +610,12 @@ openOn: aModel
 	or, use a Color class method"
 ! !
 
-!DecoupledView class methodsFor: 'example' stamp: 'dhn 12/8/2015 15:24'!
+!DecoupledView class methodsFor: 'example' stamp: 'dhn 12/8/2015 16:06'!
 twoViews
-	"Demonstrate multiple views on the same model, which is unaware that they exist"
+	"Demonstrate multiple views on the same model, which is unaware that they exist
+	
+	self twoViews.
+	"
 
 	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
 	AnotherView openOn: YerGlobal.		"open a view on the global"
