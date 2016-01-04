@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2621] on 8 December 2015 at 4:09:14.169995 pm'!
-'Description Minimalist coding examples showing how to deploy the Cuis SystemWindow.'!
-!provides: 'Pattern' 1 19!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 10:37:18.969589 am'!
+'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
+!provides: 'Pattern' 1 20!
 !classDefinition: #AbstractModel category: #Pattern!
 ActiveModel subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
