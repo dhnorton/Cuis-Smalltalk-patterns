@@ -1,8 +1,8 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 10:37:18.969589 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 12:27:21.000589 pm'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 20!
+!provides: 'Pattern' 1 21!
 !classDefinition: #AbstractModel category: #Pattern!
-ActiveModel subclass: #AbstractModel
+Workspace subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -92,10 +92,11 @@ A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!AbstractModel methodsFor: 'accessing' stamp: 'dhn 1/4/2016 12:27'!
 authorIndex
 	"Answer the value of authorIndex"
 
+	authorIndex ifNil: [authorIndex _ 0]. 	"nil is unacceptable during model initialization"
 	^ authorIndex! !
 
 !AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
