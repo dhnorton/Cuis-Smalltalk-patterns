@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 12:27:21.000589 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 3:34:47.410589 pm'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 21!
+!provides: 'Pattern' 1 22!
 !classDefinition: #AbstractModel category: #Pattern!
 Workspace subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -29,6 +29,16 @@ AbstractModel subclass: #DecoupledModel
 	category: 'Pattern'!
 !classDefinition: 'DecoupledModel class' category: #Pattern!
 DecoupledModel class
+	instanceVariableNames: ''!
+
+!classDefinition: #Examples category: #Pattern!
+Object subclass: #Examples
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pattern'!
+!classDefinition: 'Examples class' category: #Pattern!
+Examples class
 	instanceVariableNames: ''!
 
 !classDefinition: #AnotherView category: #Pattern!
@@ -76,6 +86,9 @@ The methods of this class are suitable for copying into classes being developed.
 An example model class which is unaware of its view or views. As additional views are deployed, their presence will entail no changes to this model.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
+
+!Examples commentStamp: 'dhn 1/4/2016 15:34' prior: 0!
+Observer pattern examples.!
 
 !AnotherView commentStamp: '<historical>' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
@@ -243,7 +256,31 @@ authorIndex: anObject
 initialize
 	super initialize! !
 
-!AnotherView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 14:16'!
+!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 15:14'!
+relatedViews
+	"Demonstrate multiple views on the same model, which is independent of their existence. 
+	A change in one view produces a change in the other view.
+	
+	self relatedViews.
+	"
+	| mod |
+	
+	mod _ DecoupledModel new.
+	AnotherView openOn: mod.
+	DecoupledView openOn: mod! !
+
+!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 15:15'!
+unrelatedViews
+	"Demonstrate multiple views on the same model, which is independent of their existence. 
+	A change in one view causes no change in the other view.
+	
+	self unrelatedViews.
+	"
+
+	AnotherView openOn: DecoupledModel new.
+	DecoupledView openOn: DecoupledModel new! !
+
+!AnotherView methodsFor: 'initialization' stamp: 'dhn 1/4/2016 14:41'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| listM |
@@ -267,7 +304,7 @@ buildMorphicWindow
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
 
 	self layoutMorph 	"add the above morphs to the window"
-		addMorph: listM;
+		addMorph: listM layoutSpec: (LayoutSpec proportionalWidth: 0.2);
 		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
 ! !
 
@@ -368,25 +405,6 @@ openOn: aModel
 	or, use a Color class method"
 ! !
 
-!AnotherView class methodsFor: 'example' stamp: 'dhn 12/8/2015 16:08'!
-twoViews
-	"Demonstrate multiple views on the same model, which is unaware that they exist
-	
-	self twoViews.
-	"
-	
-	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
-	AnotherView openOn: YerGlobal.		"open a view on the global"
-	DecoupledView openOn: YerGlobal.	"open the second view on the global"
-	
-	"operate either of the above views and note how they affect each other"
-
-"
-	Execute (cmd-d) the following to tidy up by deleting the global:
-	
-	Smalltalk removeKey: #YerGlobal ifAbsent: [].
-"! !
-
 !CoupledView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 12:55'!
 buildMorphicWindow
 	"Specify the layout of the view"
@@ -486,7 +504,7 @@ open
 	or, use a Color class method"
 ! !
 
-!DecoupledView methodsFor: 'initialization' stamp: 'dhn 12/5/2015 11:39'!
+!DecoupledView methodsFor: 'initialization' stamp: 'dhn 1/4/2016 14:39'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| listM |
@@ -510,7 +528,7 @@ buildMorphicWindow
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
 
 	self layoutMorph 	"add the above morphs to the window"
-		addMorph: listM;
+		addMorph: listM layoutSpec: (LayoutSpec proportionalWidth: 0.2);
 		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
 ! !
 
