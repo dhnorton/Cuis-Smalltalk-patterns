@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 3:34:47.410589 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 7:12:54.226397 pm'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 22!
+!provides: 'Pattern' 1 23!
 !classDefinition: #AbstractModel category: #Pattern!
 Workspace subclass: #AbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -51,6 +51,16 @@ WorkspaceWindow subclass: #AnotherView
 AnotherView class
 	instanceVariableNames: ''!
 
+!classDefinition: #ButtonedView category: #Pattern!
+WorkspaceWindow subclass: #ButtonedView
+	instanceVariableNames: 'buttons textPane'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Pattern'!
+!classDefinition: 'ButtonedView class' category: #Pattern!
+ButtonedView class
+	instanceVariableNames: ''!
+
 !classDefinition: #CoupledView category: #Pattern!
 WorkspaceWindow subclass: #CoupledView
 	instanceVariableNames: 'textMorph'
@@ -91,6 +101,11 @@ The methods of this class are suitable for copying into classes being developed.
 Observer pattern examples.!
 
 !AnotherView commentStamp: '<historical>' prior: 0!
+A view which takes advantage of the Cuis SystemWindow behavior.
+
+The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
+
+!ButtonedView commentStamp: '<historical>' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
@@ -256,7 +271,15 @@ authorIndex: anObject
 initialize
 	super initialize! !
 
-!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 15:14'!
+!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 16:21'!
+coupledView
+	"
+	self coupledView.
+	"
+
+	CoupledView open! !
+
+!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 19:05'!
 relatedViews
 	"Demonstrate multiple views on the same model, which is independent of their existence. 
 	A change in one view produces a change in the other view.
@@ -266,6 +289,7 @@ relatedViews
 	| mod |
 	
 	mod _ DecoupledModel new.
+	ButtonedView openOn: mod.
 	AnotherView openOn: mod.
 	DecoupledView openOn: mod! !
 
@@ -404,6 +428,193 @@ openOn: aModel
 									Theme current workspace 
 	or, use a Color class method"
 ! !
+
+!ButtonedView methodsFor: 'initialization' stamp: 'dhn 1/4/2016 18:32'!
+buildMorphicWindow
+	"Specify the layout of the view"
+	| bbb |
+	
+	self layoutMorph 	"make use of the layoutMorph already in SystemWindow; assume it to be 'column' "
+		name: #'Pattern Column'. 	"give the layoutMorph a name which will appear in the halos"
+
+	bbb _ LayoutMorph newRow
+				separation: 10@5;
+				padding: #center;
+				name: #buttons. 	"give the PluggableListMorph a name which will appear in the halos"
+	bbb addAllMorphs: self setUpButtons.
+
+	textPane _ (TextModelMorph 
+		withModel: (TextModel withText: 'foo')) 	"note the different model specification"
+			askBeforeDiscardingEdits: false;	"discard changes to the text"
+			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
+
+	self layoutMorph 	"add the above morphs to the window"
+		addMorph: bbb layoutSpec: (LayoutSpec proportionalHeight: 0.1);
+		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
+! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 19:09'!
+pressed1
+	"Set text pane to the quote"
+	
+	model authorIndex: 1.
+	
+	self whatWasSaid
+! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 19:09'!
+pressed2
+	"Set text pane to the quote"
+	
+	model authorIndex: 2.
+	
+	self whatWasSaid
+! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 19:09'!
+pressed3
+	"Set text pane to the quote"
+	
+	model authorIndex: 3.
+	
+	self whatWasSaid
+! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 19:10'!
+pressed4
+	"Set text pane to the quote"
+	
+	model authorIndex: 4.
+	
+	self whatWasSaid
+! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 19:10'!
+pressed5
+	"Set text pane to the quote"
+	
+	model authorIndex: 5.
+	
+	self whatWasSaid
+! !
+
+!ButtonedView methodsFor: 'initialization' stamp: 'dhn 1/4/2016 18:56'!
+setUpButtons
+	"Answer a set of buttons"
+	| b1 b2 b3 b4 b5 all |
+	
+	b1 _ PluggableButtonMorph model: self action: #pressed1 label: (model authors at: 1). 
+	b2 _ PluggableButtonMorph model: self action: #pressed2 label: (model authors at: 2). 
+	b3 _ PluggableButtonMorph model: self action: #pressed3 label: (model authors at: 3). 
+	b4 _ PluggableButtonMorph model: self action: #pressed4 label: (model authors at: 4). 
+	b5 _ PluggableButtonMorph model: self action: #pressed5 label: (model authors at: 5).
+	
+	all _ {b1. b2. b3. b4. b5} reverse.
+	all do: [:ea | ea morphExtent: 100@30].
+	
+	^ all ! !
+
+!ButtonedView methodsFor: 'updating' stamp: 'dhn 1/4/2016 16:22'!
+whatWasSaid
+	"Set the contents of the text pane"
+
+	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
+
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:22'!
+includeInNewMorphMenu
+	"Enables this class to appear in the  World->New morph... menu"
+	
+	^ true! !
+
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:22'!
+initializedInstance
+	"Answer an instance of this class which is initialized."
+	"This method is required in order that instantiation can occur via the World->New morph... menu"
+
+	^ self open! !
+
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:26'!
+open
+"	Answer an instance of this class.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	ButtonedView open.
+	
+	Otherwise, use the World->New morph... menu.	
+"
+	| mod win |
+
+	win _ (ButtonedView
+		open: (mod _ DecoupledModel new) "an instance of the model"
+		label: self title) 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Theme current fileList. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	mod when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
+
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 19:11'!
+openOn: aModel
+"	Answer an instance of this class on aModel.
+	To start from a Browser or a WorkSpace, do (cmd-d) the following:
+
+	ButtonedView openOn: <some model>.
+"
+	| win |
+
+	win _ (ButtonedView
+		open: aModel "an instance of the model"
+		label: self title) 	"the initial title; can be changed later with #setLabel: "
+			setWindowColor:  Theme current fileList. 	"the initial color of the window title bar and frame; other choices below"	
+	"#open:label: sends #buildMorphicWindow to the instance of this class, to allow customization of the view"
+
+	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
+	
+	^ win
+	
+	"the following answer specific colors which match Cuis themes: 
+									Theme current browser 
+									Theme current changeList 
+									Theme current changeSorter 
+									Theme current fileContentsBrowser 
+									Theme current packageList 
+									Theme current debugger 
+									Theme current fileList 
+									Theme current messageNames 
+									Theme current messageSet 
+									Theme current object 
+									Theme current testRunner 
+									Theme current textEditor 
+									Theme current transcript 
+									Theme current versionsBrowser 
+									Theme current workspace 
+	or, use a Color class method"
+! !
+
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:25'!
+title
+
+	^ 'Buttons Up on the Decoupled Model'! !
 
 !CoupledView methodsFor: 'initialization' stamp: 'dhn 12/8/2015 12:55'!
 buildMorphicWindow
@@ -628,22 +839,3 @@ openOn: aModel
 									Theme current workspace 
 	or, use a Color class method"
 ! !
-
-!DecoupledView class methodsFor: 'example' stamp: 'dhn 12/8/2015 16:06'!
-twoViews
-	"Demonstrate multiple views on the same model, which is unaware that they exist
-	
-	self twoViews.
-	"
-
-	Smalltalk at: #YerGlobal put: DecoupledModel new.	"instantiate the model and make it global"
-	AnotherView openOn: YerGlobal.		"open a view on the global"
-	DecoupledView openOn: YerGlobal.	"open the second view on the global"
-	
-	"operate either of the above views and note how they affect each other"
-
-"
-	Execute (cmd-d) the following to tidy up by deleting the global:
-	
-	Smalltalk removeKey: #YerGlobal ifAbsent: [].
-"! !
