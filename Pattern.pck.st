@@ -1,18 +1,18 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 4 January 2016 at 7:12:54.226397 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2657] on 7 January 2016 at 11:27:15.044887 am'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 23!
-!classDefinition: #AbstractModel category: #Pattern!
-Workspace subclass: #AbstractModel
+!provides: 'Pattern' 1 24!
+!classDefinition: #SampleAbstractModel category: #Pattern!
+Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
-!classDefinition: 'AbstractModel class' category: #Pattern!
-AbstractModel class
+!classDefinition: 'SampleAbstractModel class' category: #Pattern!
+SampleAbstractModel class
 	instanceVariableNames: ''!
 
 !classDefinition: #CoupledModel category: #Pattern!
-AbstractModel subclass: #CoupledModel
+SampleAbstractModel subclass: #CoupledModel
 	instanceVariableNames: 'window textPane'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -22,7 +22,7 @@ CoupledModel class
 	instanceVariableNames: 'window'!
 
 !classDefinition: #DecoupledModel category: #Pattern!
-AbstractModel subclass: #DecoupledModel
+SampleAbstractModel subclass: #DecoupledModel
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -31,14 +31,14 @@ AbstractModel subclass: #DecoupledModel
 DecoupledModel class
 	instanceVariableNames: ''!
 
-!classDefinition: #Examples category: #Pattern!
-Object subclass: #Examples
+!classDefinition: #DependencyExamples category: #Pattern!
+Object subclass: #DependencyExamples
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Pattern'!
-!classDefinition: 'Examples class' category: #Pattern!
-Examples class
+!classDefinition: 'DependencyExamples class' category: #Pattern!
+DependencyExamples class
 	instanceVariableNames: ''!
 
 !classDefinition: #AnotherView category: #Pattern!
@@ -82,7 +82,7 @@ DecoupledView class
 	instanceVariableNames: ''!
 
 
-!AbstractModel commentStamp: 'dhn 12/6/2015 15:21' prior: 0!
+!SampleAbstractModel commentStamp: 'dhn 12/6/2015 15:21' prior: 0!
 An abstract class containing methods common to some example models. Used to emphasize commonality and distinctions of the coupled and decoupled models.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
@@ -97,7 +97,7 @@ An example model class which is unaware of its view or views. As additional view
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!Examples commentStamp: 'dhn 1/4/2016 15:34' prior: 0!
+!DependencyExamples commentStamp: 'dhn 1/4/2016 15:34' prior: 0!
 Observer pattern examples.!
 
 !AnotherView commentStamp: '<historical>' prior: 0!
@@ -120,31 +120,31 @@ A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 1/4/2016 12:27'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 1/4/2016 12:27'!
 authorIndex
 	"Answer the value of authorIndex"
 
 	authorIndex ifNil: [authorIndex _ 0]. 	"nil is unacceptable during model initialization"
 	^ authorIndex! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 authors
 	"Answer the value of authors"
 
 	^ authors! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 authors: anObject
 	"Set the value of authors"
 
 	authors _ anObject! !
 
-!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
 editorClass
 
 	^ TextEditor! !
 
-!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
 fullAttribution
 	"Answer the quote and author's full name"
 	| ix text |
@@ -162,7 +162,7 @@ fullAttribution
 		ifFalse: [text nextPutAll: ''].
 	^ text contents! !
 
-!AbstractModel methodsFor: 'operating' stamp: 'dhn 12/8/2015 12:35'!
+!SampleAbstractModel methodsFor: 'operating' stamp: 'dhn 12/8/2015 12:35'!
 fullNames
 	"Answer a dictionary which translates list names to full names"
 	
@@ -174,7 +174,7 @@ fullNames
 		at: 'Willy' put: 'William Shakespeare';
 		yourself! !
 
-!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:12'!
+!SampleAbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 21:12'!
 initialize
 	super initialize.
 	self quotes: self setQuotes.
@@ -182,32 +182,32 @@ initialize
 	authorIndex _ 0 	"no authors selected in the list"
 	! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 quotes
 	"Answer the value of quotes"
 
 	^ quotes! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 quotes: anObject
 	"Set the value of quotes"
 
 	quotes _ anObject! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 15:00'!
 selectedAuthor
 	"Answer the value of selectedAuthor"
 
 	^ selectedAuthor! !
 
-!AbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 19:56'!
+!SampleAbstractModel methodsFor: 'accessing' stamp: 'dhn 12/6/2015 19:56'!
 selectedAuthor: anObject
 	"Set the value of selectedAuthor"
 
 	selectedAuthor _ anObject.
 	self changed: #authorIndex 	"enables deselection of the list by using the mouse"! !
 
-!AbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'initialization' stamp: 'dhn 12/6/2015 15:00'!
 setQuotes
 	"Answer a dictionary of quotes"
 	
@@ -271,7 +271,7 @@ authorIndex: anObject
 initialize
 	super initialize! !
 
-!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 16:21'!
+!DependencyExamples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 16:21'!
 coupledView
 	"
 	self coupledView.
@@ -279,7 +279,7 @@ coupledView
 
 	CoupledView open! !
 
-!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 19:05'!
+!DependencyExamples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 19:05'!
 relatedViews
 	"Demonstrate multiple views on the same model, which is independent of their existence. 
 	A change in one view produces a change in the other view.
@@ -293,7 +293,7 @@ relatedViews
 	AnotherView openOn: mod.
 	DecoupledView openOn: mod! !
 
-!Examples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 15:15'!
+!DependencyExamples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 15:15'!
 unrelatedViews
 	"Demonstrate multiple views on the same model, which is independent of their existence. 
 	A change in one view causes no change in the other view.
@@ -351,7 +351,7 @@ initializedInstance
 
 	^ self open! !
 
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:33'!
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:05'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -370,6 +370,7 @@ open
 
 	mod when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 400@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -391,7 +392,7 @@ open
 	or, use a Color class method"
 ! !
 
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:57'!
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:07'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -408,6 +409,7 @@ openOn: aModel
 
 	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 550@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -429,7 +431,7 @@ openOn: aModel
 	or, use a Color class method"
 ! !
 
-!ButtonedView methodsFor: 'initialization' stamp: 'dhn 1/4/2016 18:32'!
+!ButtonedView methodsFor: 'initialization' stamp: 'dhn 1/7/2016 11:11'!
 buildMorphicWindow
 	"Specify the layout of the view"
 	| bbb |
@@ -449,7 +451,7 @@ buildMorphicWindow
 			name: #quote. 	"give the TextModelMorph a name which will appear in the halos"
 
 	self layoutMorph 	"add the above morphs to the window"
-		addMorph: bbb layoutSpec: (LayoutSpec proportionalHeight: 0.1);
+		addMorph: bbb layoutSpec: (LayoutSpec proportionalHeight: 0.2);
 		addAdjusterAndMorph: textPane layoutSpec: (LayoutSpec useAll)
 ! !
 
@@ -533,7 +535,7 @@ initializedInstance
 
 	^ self open! !
 
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:26'!
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:05'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -552,6 +554,7 @@ open
 
 	mod when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 400@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -573,7 +576,7 @@ open
 	or, use a Color class method"
 ! !
 
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 19:11'!
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:10'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -590,6 +593,7 @@ openOn: aModel
 
 	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 600@300.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -762,7 +766,7 @@ initializedInstance
 
 	^ self open! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 20:31'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:01'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -781,6 +785,7 @@ open
 
 	mod when: #authorChange send: #newText to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 400@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -802,7 +807,7 @@ open
 	or, use a Color class method"
 ! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:52'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:04'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -819,6 +824,7 @@ openOn: aModel
 
 	aModel when: #authorChange send: #newText to: win. 	"add an entry to the actionMap of the model"
 	
+	win morphExtent: 400@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
