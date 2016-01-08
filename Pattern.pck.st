@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 3:15:02.474087 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 3:24:48.080087 pm'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 25!
+!provides: 'Pattern' 1 26!
 !classDefinition: #SampleAbstractModel category: #Pattern!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -534,7 +534,7 @@ initializedInstance
 
 	^ self open! !
 
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:05'!
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/8/2016 15:20'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -553,7 +553,7 @@ open
 
 	mod when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
-	win morphExtent: 400@200.
+	win morphExtent: 600@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
