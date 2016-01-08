@@ -1,6 +1,6 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2657] on 7 January 2016 at 11:27:15.044887 am'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 3:15:02.474087 pm'!
 'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 24!
+!provides: 'Pattern' 1 25!
 !classDefinition: #SampleAbstractModel category: #Pattern!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -279,10 +279,10 @@ coupledView
 
 	CoupledView open! !
 
-!DependencyExamples class methodsFor: 'examples' stamp: 'dhn 1/4/2016 19:05'!
+!DependencyExamples class methodsFor: 'examples' stamp: 'dhn 1/8/2016 14:09'!
 relatedViews
 	"Demonstrate multiple views on the same model, which is independent of their existence. 
-	A change in one view produces a change in the other view.
+	A change in one view is repeated in the other views.
 	
 	self relatedViews.
 	"
@@ -392,7 +392,7 @@ open
 	or, use a Color class method"
 ! !
 
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:07'!
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/8/2016 15:12'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -409,7 +409,6 @@ openOn: aModel
 
 	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
-	win morphExtent: 550@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -576,7 +575,7 @@ open
 	or, use a Color class method"
 ! !
 
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:10'!
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/8/2016 15:12'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -593,7 +592,6 @@ openOn: aModel
 
 	aModel when: #authorChange send: #whatWasSaid to: win. 	"add an entry to the actionMap of the model"
 	
-	win morphExtent: 600@300.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
@@ -807,7 +805,7 @@ open
 	or, use a Color class method"
 ! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:04'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/8/2016 15:11'!
 openOn: aModel
 "	Answer an instance of this class on aModel.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
@@ -824,7 +822,6 @@ openOn: aModel
 
 	aModel when: #authorChange send: #newText to: win. 	"add an entry to the actionMap of the model"
 	
-	win morphExtent: 400@200.
 	^ win
 	
 	"the following answer specific colors which match Cuis themes: 
