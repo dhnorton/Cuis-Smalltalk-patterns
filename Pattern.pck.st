@@ -1,6 +1,11 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 3:24:48.080087 pm'!
-'Description Examples of the dependency mechanism and the observer pattern, intended to help the programmer exploit some of the features of Cuis.'!
-!provides: 'Pattern' 1 26!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 3:45:22.938087 pm'!
+'Description Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
+
+The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
+
+The decoupled style employs the "observer pattern" which ensures that the model can remain unaffected by changes to the view or by additional views. The primary methods of the observer pattern are #triggerEvent: and #when:send:to: . This is the preferred style for Cuis, although both styles can be found in the base.
+'!
+!provides: 'Pattern' 1 27!
 !classDefinition: #SampleAbstractModel category: #Pattern!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
