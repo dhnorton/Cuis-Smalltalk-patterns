@@ -9,7 +9,9 @@ Install the package, then:
 
 
 >DependencyExamples relatedViews.			"Observer Pattern"
+>
 >DependencyExamples unrelatedViews.		"Observer Pattern"
+>
 >DependencyExamples coupledView.			"Dependency Mechanism"
 
 Tested in Cuis 4.2  rev 2652
