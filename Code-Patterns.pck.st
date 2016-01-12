@@ -1,11 +1,11 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 12 January 2016 at 1:26:55.210102 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 12 January 2016 at 2:13:01.300102 pm'!
 'Description Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
 
 The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
 
 The decoupled style employs the "observer pattern" which ensures that the model can remain unaffected by changes to the view or by additional views. The primary methods of the observer pattern are #triggerEvent: and #when:send:to: . This is the preferred style for Cuis, although both styles can be found in the base.
 '!
-!provides: 'Code-Patterns' 1 1!
+!provides: 'Code-Patterns' 1 2!
 !classDefinition: #SampleAbstractModel category: #'Code-Patterns'!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -102,12 +102,12 @@ An example model class which is unaware of its view or views. As additional view
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!DependencyExamples commentStamp: 'dhn 1/12/2016 13:23' prior: 0!
-Observer pattern examples.
+!DependencyExamples commentStamp: 'dhn 1/12/2016 14:12' prior: 0!
+Observer Pattern and Dependency Mechanism examples.
 
-DependencyExamples relatedViews.
-DependencyExamples unrelatedViews.
-DependencyExamples coupledView.
+DependencyExamples relatedViews.			"Observer Pattern"
+DependencyExamples unrelatedViews.		"Observer Pattern"
+DependencyExamples coupledView.			"Dependency Mechanism"
 !
 
 !AnotherView commentStamp: '<historical>' prior: 0!
