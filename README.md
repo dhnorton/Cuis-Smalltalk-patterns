@@ -8,8 +8,8 @@ The decoupled style employs the "observer pattern" which ensures that the model 
 Install the package, then:
 
 
-DependencyExamples relatedViews.			"Observer Pattern"
-DependencyExamples unrelatedViews.		"Observer Pattern"
-DependencyExamples coupledView.			"Dependency Mechanism"
+>DependencyExamples relatedViews.			"Observer Pattern"
+>DependencyExamples unrelatedViews.		"Observer Pattern"
+>DependencyExamples coupledView.			"Dependency Mechanism"
 
 Tested in Cuis 4.2  rev 2652
