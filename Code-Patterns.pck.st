@@ -1,11 +1,11 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 8 January 2016 at 7:22:13.150087 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 12 January 2016 at 1:26:55.210102 pm'!
 'Description Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
 
 The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
 
 The decoupled style employs the "observer pattern" which ensures that the model can remain unaffected by changes to the view or by additional views. The primary methods of the observer pattern are #triggerEvent: and #when:send:to: . This is the preferred style for Cuis, although both styles can be found in the base.
 '!
-!provides: 'Code-Patterns' 1 0!
+!provides: 'Code-Patterns' 1 1!
 !classDefinition: #SampleAbstractModel category: #'Code-Patterns'!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -102,8 +102,13 @@ An example model class which is unaware of its view or views. As additional view
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!DependencyExamples commentStamp: 'dhn 1/4/2016 15:34' prior: 0!
-Observer pattern examples.!
+!DependencyExamples commentStamp: 'dhn 1/12/2016 13:23' prior: 0!
+Observer pattern examples.
+
+DependencyExamples relatedViews.
+DependencyExamples unrelatedViews.
+DependencyExamples coupledView.
+!
 
 !AnotherView commentStamp: '<historical>' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
@@ -343,27 +348,12 @@ whatWasSaid
 
 	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
 
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:16'!
-includeInNewMorphMenu
-	"Enables this class to appear in the  World->New morph... menu"
-	
-	^ true! !
-
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 14:16'!
-initializedInstance
-	"Answer an instance of this class which is initialized."
-	"This method is required in order that instantiation can occur via the World->New morph... menu"
-
-	^ self open! !
-
-!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:05'!
+!AnotherView class methodsFor: 'instance creation' stamp: 'dhn 1/12/2016 13:19'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
 	AnotherView open.
-	
-	Otherwise, use the World->New morph... menu.	
 "
 	| mod win |
 
@@ -526,27 +516,12 @@ whatWasSaid
 
 	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
 
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:22'!
-includeInNewMorphMenu
-	"Enables this class to appear in the  World->New morph... menu"
-	
-	^ true! !
-
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/4/2016 16:22'!
-initializedInstance
-	"Answer an instance of this class which is initialized."
-	"This method is required in order that instantiation can occur via the World->New morph... menu"
-
-	^ self open! !
-
-!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/8/2016 15:20'!
+!ButtonedView class methodsFor: 'instance creation' stamp: 'dhn 1/12/2016 13:19'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
 	ButtonedView open.
-	
-	Otherwise, use the World->New morph... menu.	
 "
 	| mod win |
 
@@ -668,28 +643,12 @@ textMorph: anObject
 
 	textMorph _ anObject! !
 
-!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/16/2015 15:32'!
-includeInNewMorphMenu
-	"Enable starting from the  World->New morph... menu"
-	"Requires #handlesKeyboard property"
-	
-	^ true! !
-
-!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 21:08'!
-initializedInstance
-	"Answer an instance of this class which is initialized."
-	"This method is required in order that instantiation can occur via World->New morph... menu"
-
-	^ self open! !
-
-!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/8/2015 12:53'!
+!CoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/12/2016 13:17'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
 	CoupledView open.
-	
-	Otherwise, use the World->New morph... menu.	
 "
 	| win mod |
 
@@ -756,27 +715,12 @@ newText
 
 	textPane model actualContents: model fullAttribution 	"note that the textPane model differs from the model for this view"! !
 
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 12/6/2015 13:50'!
-includeInNewMorphMenu
-	"Enables this class to appear in the  World->New morph... menu"
-	
-	^ true! !
-
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 11/18/2015 14:34'!
-initializedInstance
-	"Answer an instance of this class which is initialized."
-	"This method is required in order that instantiation can occur via the World->New morph... menu"
-
-	^ self open! !
-
-!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/7/2016 11:01'!
+!DecoupledView class methodsFor: 'instance creation' stamp: 'dhn 1/12/2016 13:16'!
 open
 "	Answer an instance of this class.
 	To start from a Browser or a WorkSpace, do (cmd-d) the following:
 
 	DecoupledView open.
-	
-	Otherwise, use the World->New morph... menu.	
 "
 	| mod win |
 
