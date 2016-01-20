@@ -7,5 +7,9 @@ Techniques of Interest
 - Multiple views on a single model
 
 - Changes in views do not affect the model
+
+- Example of changing all views when one view changes
+
+- Example of changing one view having no effect on other views 
  
-- Examples contrasting Observer Pattern and Dependency Mechanism 
+- Contrasting Observer Pattern and Dependency Mechanism 
