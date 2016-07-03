@@ -1,11 +1,11 @@
-'From Cuis 4.2 of 25 July 2013 [latest update: #2652] on 12 January 2016 at 2:13:01.300102 pm'!
+'From Cuis 4.2 of 25 July 2013 [latest update: #2829] on 3 July 2016 at 6:57:46.602709 pm'!
 'Description Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
 
 The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
 
 The decoupled style employs the "observer pattern" which ensures that the model can remain unaffected by changes to the view or by additional views. The primary methods of the observer pattern are #triggerEvent: and #when:send:to: . This is the preferred style for Cuis, although both styles can be found in the base.
 '!
-!provides: 'Code-Patterns' 1 2!
+!provides: 'Code-Patterns' 1 3!
 !classDefinition: #SampleAbstractModel category: #'Code-Patterns'!
 Workspace subclass: #SampleAbstractModel
 	instanceVariableNames: 'authors authorIndex selectedAuthor quotes'
@@ -154,23 +154,22 @@ editorClass
 
 	^ TextEditor! !
 
-!SampleAbstractModel methodsFor: 'operating' stamp: 'dhn 12/6/2015 15:00'!
+!SampleAbstractModel methodsFor: 'operating' stamp: 'dhn 7/3/2016 18:25'!
 fullAttribution
-	"Answer the quote and author's full name"
-	| ix text |
+	"Answer the quote with the author's full name"
+	| ix |
 
 	ix _ self authorIndex.
-	text _ String new writeStream.
-	(ix ~= 0)
-		ifTrue: [
-			self selectedAuthor: (self authors at: ix).
-			text 
-				nextPutAll: (self quotes at: self selectedAuthor);
-				newLine; newLine; tab; tab;
-				nextPutAll: '- ';
-				nextPutAll: (self fullNames at: self selectedAuthor)]
-		ifFalse: [text nextPutAll: ''].
-	^ text contents! !
+	^ String streamContents: [:text |
+		(ix ~= 0)
+			ifTrue: [
+				self selectedAuthor: (self authors at: ix).
+				text 
+					nextPutAll: (self quotes at: self selectedAuthor);
+					newLine; newLine; tab; tab;
+					nextPutAll: '- ';
+					nextPutAll: (self fullNames at: self selectedAuthor)]
+			ifFalse: [text nextPutAll: '']]! !
 
 !SampleAbstractModel methodsFor: 'operating' stamp: 'dhn 12/8/2015 12:35'!
 fullNames
