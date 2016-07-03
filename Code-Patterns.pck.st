@@ -110,12 +110,12 @@ DependencyExamples unrelatedViews.		"Observer Pattern"
 DependencyExamples coupledView.			"Dependency Mechanism"
 !
 
-!AnotherView commentStamp: '<historical>' prior: 0!
+!AnotherView commentStamp: 'dhn 11/17/2015 15:08' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!ButtonedView commentStamp: '<historical>' prior: 0!
+!ButtonedView commentStamp: 'dhn 11/17/2015 15:08' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
@@ -125,7 +125,7 @@ A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
 
-!DecoupledView commentStamp: '<historical>' prior: 0!
+!DecoupledView commentStamp: 'dhn 11/17/2015 15:08' prior: 0!
 A view which takes advantage of the Cuis SystemWindow behavior.
 
 The methods of this class are suitable for copying into classes being developed. It is expected that many of the method comments will be removed or modified after they are incorporated in the new code. This class comment should also be changed.!
