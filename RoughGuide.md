@@ -2,7 +2,8 @@ Cuis-Smalltalk-patterns
 ==========================
 Techniques of Interest
 
-
+- How to use PluggableListMorph (read the line comments)
+ 
 - Multiple views on a single model
  
 - Model is independent of the views
