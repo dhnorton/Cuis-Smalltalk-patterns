@@ -1,4 +1,4 @@
-##Cuis-Smalltalk-patterns
+## Patterns
 Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
 
 The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
@@ -14,4 +14,4 @@ Install the package, then:
 >
 >DependencyExamples coupledView.			"Dependency Mechanism"
 
-Tested in Cuis 5.0  rev 3329
+Tested in Cuis 5.0  rev 3631 on 2/25/2019
