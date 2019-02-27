@@ -1,4 +1,4 @@
-Cuis-Smalltalk-patterns
+Patterns
 ==========================
 Techniques of Interest
 
