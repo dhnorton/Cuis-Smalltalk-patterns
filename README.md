@@ -1,4 +1,6 @@
 ## Patterns
+As of 2/28/2019, the Patterns repo is maintained at https://github.com/Cuis-Smalltalk/CodeExamples
+
 Useful Cuis code patterns, intended to help the programmer exploit some of the features of Cuis classes. These examples separate model from view and feature two styles: coupled and decoupled.
 
 The coupled style employs the "dependency mechanism" and exposes the model to changes in the view and to views which were unanticipated. The primary methods of the dependency mechanism are #changed: and #update: .
